@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Админка — фото гостей</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="grain">
+
+  <!-- вход -->
+  <div class="admin-login" id="login-view">
+    <h1 style="font-size:2rem;font-weight:500">Вход для пары</h1>
+    <p style="color:var(--ink-soft);margin:0.6rem 0 1.4rem">Модерация фотографий гостей</p>
+    <form id="login-form" style="display:flex;flex-direction:column;gap:0.9rem">
+      <input class="rsvp-input" type="password" id="password" placeholder="Пароль" autocomplete="current-password" required />
+      <button class="btn" type="submit">Войти</button>
+      <p id="login-error" style="color:#a02020;font-family:var(--sans);font-size:0.8rem;min-height:1.2em"></p>
+    </form>
+  </div>
+
+  <!-- панель -->
+  <div class="admin-wrap" id="panel-view" hidden>
+    <div class="page-head" style="padding-top:2rem">
+      <h1>Фотографии гостей</h1>
+      <p id="stats"></p>
+    </div>
+
+    <div class="admin-toolbar">
+      <button class="tab-btn active" data-tab="pending">На модерации</button>
+      <button class="tab-btn" data-tab="published">Опубликованные</button>
+      <button class="tab-btn" data-tab="all">Все</button>
+      <span style="flex-basis:100%"></span>
+      <button class="btn" id="publish-all" style="font-size:0.9rem;padding:0.6rem 1.5rem">✓ Опубликовать все новые</button>
+      <a class="btn btn-ghost" href="/qr.html" style="font-size:0.9rem;padding:0.6rem 1.5rem">QR-код для гостей</a>
+      <a class="btn btn-ghost" href="/album.html" style="font-size:0.9rem;padding:0.6rem 1.5rem">Альбом</a>
+    </div>
+
+    <div class="admin-grid" id="grid"></div>
+    <p class="album-empty" id="empty" hidden>Пока нет фотографий в этой вкладке.</p>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/vendor/gsap/gsap.min.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

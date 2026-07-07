@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-t="meta.title">Salome & Nika — Приглашение</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="grain">
+
+  <!-- HERO -->
+  <section class="floral-hero" id="hero">
+    <img class="floral-blur" src="/img/roses.webp" alt="" aria-hidden="true" />
+    <div class="floral-frame">
+      <img class="floral-art" src="/img/roses.webp" alt="Розы" />
+      <div class="floral-overlay">
+        <p class="floral-eyebrow" data-t="hero.eyebrow">В розовом саду</p>
+        <h1 class="floral-names">
+          <span data-t="hero.name1">Salome</span><span class="floral-amp">&amp;</span><span data-t="hero.name2">Nika</span>
+        </h1>
+        <span class="floral-rule" aria-hidden="true"></span>
+        <p class="floral-date" data-t="hero.date">4 октября 2026</p>
+        <p class="floral-loc" data-t="hero.venue">The Rose Manor</p>
+      </div>
+    </div>
+    <span class="floral-scroll" aria-hidden="true">↓</span>
+  </section>
+
+  <!-- ОБРАТНЫЙ ОТСЧЁТ -->
+  <section class="countdown-section reveal">
+    <p class="section-num">— <span data-t="countdown.heading">До встречи осталось</span> —</p>
+    <div class="countdown-row" id="countdown">
+      <div class="countdown-cell"><span class="countdown-value" id="cd-days">··</span><span class="countdown-label" data-t="countdown.days">дней</span></div>
+      <div class="countdown-cell"><span class="countdown-value" id="cd-hours">··</span><span class="countdown-label" data-t="countdown.hours">часов</span></div>
+      <div class="countdown-cell"><span class="countdown-value" id="cd-min">··</span><span class="countdown-label" data-t="countdown.min">минут</span></div>
+      <div class="countdown-cell"><span class="countdown-value" id="cd-sec">··</span><span class="countdown-label" data-t="countdown.sec">секунд</span></div>
+    </div>
+  </section>
+
+  <!-- 01 МЕСТО -->
+  <section class="section">
+    <div class="section-card reveal">
+      <p class="section-num" data-t="venue.num">— 01 —</p>
+      <h2 data-t="venue.heading">Место проведения</h2>
+      <p class="venue-name" data-t="venue.name">The Rose Manor</p>
+      <p data-t="venue.address">Тбилиси</p>
+      <a class="map-link" id="map-link" href="#" target="_blank" rel="noopener">Посмотреть на карте ↗</a>
+    </div>
+  </section>
+
+  <!-- 02 ПРОГРАММА -->
+  <section class="section">
+    <div class="section-card reveal">
+      <p class="section-num" data-t="programme.num">— 02 —</p>
+      <h2 data-t="programme.heading">Программа</h2>
+      <div class="schedule" id="schedule"></div>
+    </div>
+  </section>
+
+  <!-- 03 ДРЕСС-КОД -->
+  <section class="section">
+    <div class="section-card reveal">
+      <p class="section-num" data-t="dresscode.num">— 03 —</p>
+      <h2 data-t="dresscode.heading">Дресс-код</h2>
+      <p data-t="dresscode.text">Романтичный · пудровые оттенки</p>
+    </div>
+  </section>
+
+  <!-- 04 RSVP -->
+  <section class="section" id="rsvp">
+    <div class="section-card reveal">
+      <p class="section-num" data-t="rsvp.num">— 04 —</p>
+      <h2 data-t="rsvp.heading">Вы придёте?</h2>
+      <p style="font-style:italic" data-t="rsvp.subtitle">Ваш ответ очень важен для нас.</p>
+      <form class="rsvp" id="rsvp-form">
+        <div>
+          <label class="rsvp-label" data-t="rsvp.nameLabel">Ваше имя</label>
+          <input class="rsvp-input" id="rsvp-name" data-t-ph="rsvp.namePlaceholder" placeholder="Ваше имя" required maxlength="60" />
+        </div>
+        <div>
+          <label class="rsvp-label" data-t="rsvp.attendLabel">Придёте ли вы?</label>
+          <div class="rsvp-choice">
+            <button type="button" class="rsvp-choice-btn" data-attend="yes"><span data-t="rsvp.attendYes">С радостью, да</span></button>
+            <button type="button" class="rsvp-choice-btn" data-attend="no"><span data-t="rsvp.attendNo">К сожалению, нет</span></button>
+          </div>
+        </div>
+        <div>
+          <label class="rsvp-label" data-t="rsvp.messageLabel">Сообщение для пары</label>
+          <textarea class="rsvp-input" id="rsvp-msg" rows="3" maxlength="500" data-t-ph="rsvp.messagePlaceholder" style="resize:vertical"></textarea>
+        </div>
+        <button type="submit" class="btn" data-t="rsvp.submit">Отправить ответ →</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- 05 ФОТО -->
+  <section class="section" id="photos">
+    <div class="section-card reveal">
+      <p class="section-num" data-t="photos.num">— 05 —</p>
+      <h2 data-t="photos.heading">Поделитесь фотографиями</h2>
+      <p data-t="photos.subtitle">Снимайте моменты праздника — лучшие кадры попадут в наш общий альбом.</p>
+      <div class="photo-cta">
+        <a class="btn" href="/camera.html" data-t="photos.uploadBtn">📷 Загрузить фото</a>
+        <a class="btn btn-ghost" href="/album.html" data-t="photos.albumBtn">Смотреть альбом →</a>
+      </div>
+    </div>
+  </section>
+
+  <p class="credit reveal" data-t="footer.line">С любовью, Salome &amp; Nika</p>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/vendor/gsap/gsap.min.js"></script>
+  <script src="/vendor/gsap/ScrollTrigger.min.js"></script>
+  <script src="/js/content.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>
