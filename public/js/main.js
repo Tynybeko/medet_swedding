@@ -167,6 +167,49 @@ document.getElementById('rsvp-form').addEventListener('submit', (e) => {
   e.target.reset();
 });
 
+/* ---------- фоновая музыка ---------- */
+const music = document.getElementById('bg-music');
+const musicBtn = document.getElementById('music-toggle');
+let musicWanted = true; // false — гость сам выключил, не навязываем
+
+function updateMusicBtn() {
+  musicBtn.classList.toggle('is-muted', music.paused);
+  musicBtn.setAttribute('aria-label', music.paused ? 'Включить музыку' : 'Выключить музыку');
+}
+
+function tryPlayMusic() {
+  if (!musicWanted || !music.paused) return;
+  music.volume = 0;
+  music
+    .play()
+    .then(() => {
+      gsap.to(music, { volume: 0.55, duration: 2.5, ease: 'power1.in' }); // плавное нарастание
+      updateMusicBtn();
+    })
+    .catch(() => {
+      /* автозапуск заблокирован браузером — запустимся при первом касании */
+    });
+}
+
+tryPlayMusic();
+// браузеры разрешают звук после первого взаимодействия — ловим любое
+['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach((ev) =>
+  window.addEventListener(ev, () => tryPlayMusic(), { once: true, passive: true })
+);
+
+musicBtn.addEventListener('click', () => {
+  if (music.paused) {
+    musicWanted = true;
+    music.volume = 0.55;
+    music.play().then(updateMusicBtn).catch(() => {});
+  } else {
+    musicWanted = false;
+    music.pause();
+    updateMusicBtn();
+  }
+  gsap.fromTo(musicBtn, { scale: 0.85 }, { scale: 1, duration: 0.4, ease: 'back.out(2.5)' });
+});
+
 /* лёгкое «дыхание» кнопок фото-блока */
 gsap.to('.photo-cta .btn:first-child', {
   scale: 1.03,
