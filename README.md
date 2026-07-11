@@ -17,20 +17,26 @@ ADMIN_PASSWORD=мой-секрет npm start
 
 Локально фото хранятся в `uploads/`, метаданные — в `data/photos.json`.
 
-## Деплой на Vercel
+## Деплой на Vercel (фото — в Cloudinary, бесплатно)
 
-Приложение работает как одна serverless-функция (`api/index.js` + `vercel.json`),
-а фото хранятся в **Vercel Blob** (облачное хранилище, ничего не теряется).
+Приложение работает как одна serverless-функция (`api/index.js` + `vercel.json`).
+Диск на Vercel только для чтения, поэтому фото хранятся во внешнем облаке —
+**Cloudinary** (бесплатный тариф, карта не нужна):
 
-1. В панели Vercel откройте проект → вкладка **Storage** → **Create Database →
-   Blob** → подключите к проекту. Vercel сам добавит переменную
-   `BLOB_READ_WRITE_TOKEN` — по ней приложение переключается с диска на облако.
-2. В **Settings → Environment Variables** добавьте `ADMIN_PASSWORD`
-   со своим паролем (иначе останется `admin123`).
-3. Запушьте репозиторий — Vercel пересоберёт сайт.
+1. Зарегистрируйтесь на [cloudinary.com](https://cloudinary.com) (Free plan).
+2. На главной странице Dashboard найдите **API environment variable** — строку
+   вида `CLOUDINARY_URL=cloudinary://123456789:abcDEF@ваш-cloud`.
+3. В Vercel: **Settings → Environment Variables** → добавьте:
+   - `CLOUDINARY_URL` = `cloudinary://…` (значение из шага 2, без префикса
+     `CLOUDINARY_URL=`),
+   - `ADMIN_PASSWORD` = ваш пароль админки (иначе останется `admin123`).
+4. Запушьте репозиторий — Vercel пересоберёт сайт.
 
-Без Blob-хранилища сайт на Vercel работать не будет (диск там только для
-чтения) — шаг 1 обязателен.
+Статус модерации хранится тегом `pending`/`published` на самом фото в
+Cloudinary, автор и IP — в метаданных, так что база данных не нужна.
+
+Поддерживается и Vercel Blob как альтернатива: если вместо `CLOUDINARY_URL`
+задан `BLOB_READ_WRITE_TOKEN`, фото пойдут туда.
 
 На Vercel правка текстов = правка `content.json` в репозитории + push
 (файловая система serverless не изменяема).

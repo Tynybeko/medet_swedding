@@ -1,10 +1,12 @@
 /**
  * Wedding site — Express-приложение (общее для локального запуска и Vercel).
  *
- * Хранение фото:
- *  - если задан BLOB_READ_WRITE_TOKEN (Vercel) — фото лежат в Vercel Blob,
- *    метаданные закодированы прямо в имени файла (никакой БД не нужно);
- *  - иначе (локально) — папка uploads/ + data/photos.json, как раньше.
+ * Хранение фото (по приоритету):
+ *  - CLOUDINARY_URL задан — фото в Cloudinary (бесплатно, без Vercel Storage);
+ *    статус модерации — тег pending/published, гость и IP — в context;
+ *  - BLOB_READ_WRITE_TOKEN задан — фото в Vercel Blob,
+ *    метаданные закодированы прямо в имени файла;
+ *  - иначе (локально) — папка uploads/ + data/photos.json.
  *
  * Правила: лимит 10 фото на гостя (по guestId И по IP), гость удаляет только
  * своё, фото видны в альбоме лишь после публикации админом.
@@ -19,6 +21,7 @@ const fs = require('fs');
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const MAX_PHOTOS_PER_GUEST = 10;
 const BLOB_MODE = !!process.env.BLOB_READ_WRITE_TOKEN;
+const CLOUDINARY_MODE = !!process.env.CLOUDINARY_URL;
 
 /* ==================== слой хранения ==================== */
 /* Единый интерфейс: list() / add() / remove() / setPublished() —
@@ -29,7 +32,80 @@ const EXT_BY_MIME = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '
 
 let storage;
 
-if (BLOB_MODE) {
+if (CLOUDINARY_MODE) {
+  const cloudinary = require('cloudinary').v2; // конфиг берётся из CLOUDINARY_URL
+  const b64 = (s) => Buffer.from(s || '', 'utf8').toString('base64url');
+  const unb64 = (s) => Buffer.from(s || '', 'base64url').toString('utf8');
+
+  // Admin API Cloudinary имеет лимит запросов, поэтому список кэшируем
+  // в памяти на несколько секунд; любая запись сбрасывает кэш
+  const CACHE_TTL = 15 * 1000;
+  let cache = { at: 0, data: null };
+  const invalidate = () => { cache = { at: 0, data: null }; };
+
+  function toRecord(r) {
+    const ctx = (r.context && r.context.custom) || {};
+    return {
+      id: r.public_id.split('/').pop(),
+      publicId: r.public_id,
+      guestId: unb64(ctx.g),
+      ip: unb64(ctx.i),
+      guestName: unb64(ctx.n),
+      uploadedAt: Number(ctx.ts) || Date.parse(r.created_at) || 0,
+      published: (r.tags || []).includes('published'),
+      url: r.secure_url,
+    };
+  }
+
+  storage = {
+    async list() {
+      if (cache.data && Date.now() - cache.at < CACHE_TTL) return cache.data;
+      const out = [];
+      let next_cursor;
+      do {
+        const r = await cloudinary.api.resources({
+          type: 'upload',
+          prefix: 'wedding/',
+          max_results: 500,
+          context: true,
+          tags: true,
+          next_cursor,
+        });
+        out.push(...r.resources);
+        next_cursor = r.next_cursor;
+      } while (next_cursor);
+      const data = out.map(toRecord);
+      cache = { at: Date.now(), data };
+      return data;
+    },
+    async add({ buffer, contentType, guestId, ip, guestName }) {
+      const id = crypto.randomUUID();
+      const result = await new Promise((resolve, reject) => {
+        const s = cloudinary.uploader.upload_stream(
+          {
+            public_id: `wedding/${id}`,
+            resource_type: 'image',
+            tags: ['pending'],
+            context: { g: b64(guestId), i: b64(ip), n: b64(guestName), ts: String(Date.now()) },
+          },
+          (err, res) => (err ? reject(err) : resolve(res)),
+        );
+        s.end(buffer);
+      });
+      invalidate();
+      return { id, publicId: result.public_id, guestId, ip, guestName, uploadedAt: Date.now(), published: false, url: result.secure_url };
+    },
+    async remove(rec) {
+      await cloudinary.uploader.destroy(rec.publicId, { invalidate: true });
+      invalidate();
+    },
+    async setPublished(rec, published) {
+      // replace_tag заменяет все теги — статус у фото ровно один
+      await cloudinary.uploader.replace_tag(published ? 'published' : 'pending', [rec.publicId]);
+      invalidate();
+    },
+  };
+} else if (BLOB_MODE) {
   const { put, del, list, copy } = require('@vercel/blob');
   const b64 = (s) => Buffer.from(s || '', 'utf8').toString('base64url');
   const unb64 = (s) => Buffer.from(s || '', 'base64url').toString('utf8');
