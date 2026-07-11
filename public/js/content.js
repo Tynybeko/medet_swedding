@@ -23,7 +23,9 @@ window.Content = (() => {
       const val = get(el.dataset.tPh);
       if (typeof val === 'string' && el.placeholder !== val) el.placeholder = val;
     });
-    const title = get('meta.title');
+    // заголовок вкладки меняем только там, где <title> помечен data-t
+    const titleEl = document.querySelector('title[data-t]');
+    const title = titleEl && get(titleEl.dataset.t);
     if (title && document.title !== title) document.title = title;
   }
 
