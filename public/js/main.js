@@ -152,19 +152,28 @@ document.getElementById('rsvp-form').addEventListener('submit', (e) => {
   e.preventDefault();
   const name = document.getElementById('rsvp-name').value.trim();
   if (!name) return;
-  const entry = {
-    name,
-    attend: attend || 'yes',
-    message: document.getElementById('rsvp-msg').value.trim(),
-    at: new Date().toISOString(),
-  };
-  const saved = JSON.parse(localStorage.getItem('rsvp-entries') || '[]');
-  saved.push(entry);
-  localStorage.setItem('rsvp-entries', JSON.stringify(saved));
+  const message = document.getElementById('rsvp-msg').value.trim();
+  const attendLabel =
+    attend === 'no'
+      ? Content.get('rsvp.attendNo') || 'К сожалению, нет'
+      : Content.get('rsvp.attendYes') || 'С радостью, да';
+
+  // формируем сообщение и открываем WhatsApp пары
+  const lines = [
+    Content.get('rsvp.waIntro') || '💐 Ответ на приглашение',
+    '',
+    `Имя: ${name}`,
+    `Придёт: ${attendLabel}`,
+  ];
+  if (message) lines.push(`Сообщение: ${message}`);
+  const phone = (Content.get('rsvp.whatsapp') || '+996 999 858 595').replace(/\D/g, '');
+  const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`;
+
   const card = e.target.closest('.section-card');
   gsap.to(card, { scale: 0.98, yoyo: true, repeat: 1, duration: 0.15 });
   showToast(Content.get('rsvp.thanks') || 'Спасибо!');
   e.target.reset();
+  window.open(waUrl, '_blank', 'noopener'); // на телефоне откроется приложение WhatsApp
 });
 
 /* ---------- фоновая музыка ---------- */
