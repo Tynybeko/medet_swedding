@@ -339,6 +339,80 @@ app.get('/api/qr', ah(async (req, res) => {
   res.json({ url, qr: dataUrl });
 }));
 
+/* ---------- PDF-постер с QR для печати ---------- */
+app.get('/api/qr.pdf', ah(async (req, res) => {
+  const PDFDocument = require('pdfkit');
+  const content = JSON.parse(fs.readFileSync(path.join(__dirname, 'content.json'), 'utf8'));
+  const host = req.headers.host;
+  const proto = req.headers['x-forwarded-proto'] || 'http';
+  const url = `${proto}://${host}/camera.html`;
+
+  // A3 портрет; QR рисуем векторными квадратами — при печати в любом
+  // размере (хоть баннер 2×3 м) он останется идеально резким
+  const W = 841.89, H = 1190.55;
+  const ROSE = '#b0495c', ROSE_DEEP = '#8c3547', INK = '#3c2228', SOFT = '#7a5a60', PAPER = '#fdf7f4';
+
+  const doc = new PDFDocument({ size: [W, H], margin: 0 });
+  res.set('Content-Type', 'application/pdf');
+  res.set('Content-Disposition', 'attachment; filename="qr-banner.pdf"');
+  doc.pipe(res);
+
+  doc.registerFont('serif', path.join(__dirname, 'fonts', 'PTSerif-Regular.ttf'));
+  doc.registerFont('serif-bold', path.join(__dirname, 'fonts', 'PTSerif-Bold.ttf'));
+  doc.registerFont('serif-italic', path.join(__dirname, 'fonts', 'PTSerif-Italic.ttf'));
+
+  // фон и рамка
+  doc.rect(0, 0, W, H).fill(PAPER);
+  doc.lineWidth(1.5).roundedRect(36, 36, W - 72, H - 72, 18).stroke(ROSE);
+  doc.lineWidth(0.7).roundedRect(46, 46, W - 92, H - 92, 14).stroke('#d9a3ad');
+
+  // шапка
+  doc.font('serif-italic').fontSize(20).fillColor(SOFT)
+    .text((content.hero && content.hero.eyebrow) || '', 0, 96, { width: W, align: 'center' });
+  doc.font('serif-bold').fontSize(56).fillColor(ROSE_DEEP)
+    .text((content.meta && content.meta.couple) || '', 0, 128, { width: W, align: 'center' });
+  // разделитель
+  doc.moveTo(W / 2 - 90, 210).lineTo(W / 2 + 90, 210).lineWidth(1).stroke(ROSE);
+
+  doc.font('serif-bold').fontSize(34).fillColor(INK)
+    .text((content.qr && content.qr.title) || 'Поделитесь моментами!', 0, 240, { width: W, align: 'center' });
+  doc.font('serif').fontSize(17).fillColor(SOFT)
+    .text((content.qr && content.qr.subtitle) || '', W * 0.18, 296, { width: W * 0.64, align: 'center', lineGap: 4 });
+
+  // белая карточка + векторный QR
+  const qr = QRCode.create(url, { errorCorrectionLevel: 'H' });
+  const size = qr.modules.size;
+  const QR_SIZE = 430;
+  const cell = QR_SIZE / size;
+  const qx = (W - QR_SIZE) / 2;
+  const qy = 400;
+  doc.roundedRect(qx - 30, qy - 30, QR_SIZE + 60, QR_SIZE + 60, 22).fill('#ffffff');
+  doc.lineWidth(1).roundedRect(qx - 30, qy - 30, QR_SIZE + 60, QR_SIZE + 60, 22).stroke('#e8c5cc');
+  doc.fillColor('#4a1f28');
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
+      if (qr.modules.get(r, c)) doc.rect(qx + c * cell, qy + r * cell, cell + 0.3, cell + 0.3);
+    }
+  }
+  doc.fill('#4a1f28');
+
+  // подсказка и адрес
+  doc.font('serif-italic').fontSize(18).fillColor(SOFT)
+    .text((content.qr && content.qr.hint) || '', 0, qy + QR_SIZE + 58, { width: W, align: 'center' });
+  doc.font('serif').fontSize(15).fillColor(ROSE)
+    .text(url, 0, qy + QR_SIZE + 92, { width: W, align: 'center' });
+
+  // рекламный футер
+  const fy = H - 132;
+  doc.moveTo(W / 2 - 140, fy).lineTo(W / 2 + 140, fy).lineWidth(0.7).stroke('#d9a3ad');
+  doc.font('serif').fontSize(13).fillColor(SOFT)
+    .text('Хотите такое же пригласительное?', 0, fy + 16, { width: W, align: 'center' });
+  doc.font('serif-bold').fontSize(14).fillColor(ROSE_DEEP)
+    .text('Telegram @zhtynybek   ·   WhatsApp +996 559 020 199', 0, fy + 38, { width: W, align: 'center' });
+
+  doc.end();
+}));
+
 /* ---------- API администратора ---------- */
 
 app.post('/api/admin/login', (req, res) => {

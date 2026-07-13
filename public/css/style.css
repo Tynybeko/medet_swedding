@@ -176,6 +176,47 @@ input, textarea { font-family: inherit; }
 .section-card p { color: var(--ink-soft); font-size: 1.08rem; line-height: 1.6; }
 .speech-text { white-space: pre-line; font-style: italic; line-height: 1.75 !important; }
 
+/* ============ рекламный футер ============ */
+.promo-footer {
+  text-align: center;
+  padding: 1.6rem 1rem 2rem;
+  border-top: 1px solid rgba(176, 73, 92, 0.14);
+  background: rgba(255, 255, 255, 0.45);
+}
+.promo-footer p {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.75rem;
+}
+.promo-links {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.promo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid rgba(176, 73, 92, 0.25);
+  border-radius: 2rem;
+  background: #fff;
+  color: var(--rose-deep);
+  text-decoration: none;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.promo-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -14px rgba(140, 53, 71, 0.6);
+}
+.promo-link svg { width: 17px; height: 17px; flex: none; }
+
 /* ============ кнопка музыки ============ */
 .music-toggle {
   position: fixed;

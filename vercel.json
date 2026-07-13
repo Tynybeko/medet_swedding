@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": "{public/**,content.json}",
+      "includeFiles": "{public/**,fonts/**,content.json}",
       "maxDuration": 30
     }
   },
