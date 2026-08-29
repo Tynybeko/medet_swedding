@@ -166,7 +166,7 @@ document.getElementById('rsvp-form').addEventListener('submit', (e) => {
     `Придёт: ${attendLabel}`,
   ];
   if (message) lines.push(`Сообщение: ${message}`);
-  const phone = (Content.get('rsvp.whatsapp') || '+996 999 858 595').replace(/\D/g, '');
+  const phone = (Content.get('rsvp.whatsapp') || '+996 559 02 01 99').replace(/\D/g, '');
   const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`;
 
   const card = e.target.closest('.section-card');
