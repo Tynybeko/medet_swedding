@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ky">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Загрузить фото — Медет & Айпери</title>
+  <title>Сүрөт жүктөө — Кылымбек жана Мырзагул</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="grain">
 
   <div class="page-head" style="padding-top:2.4rem">
-    <h1 data-t="camera.title">Ваши фото</h1>
-    <p data-t="camera.subtitle">Сфотографируйте момент — после одобрения пары он появится в альбоме.</p>
-    <a class="page-back" href="/" data-t="album.back">← К приглашению</a>
+    <h1 data-t="camera.title">Сүрөттөрүңүз</h1>
+    <p data-t="camera.subtitle">Көз ирмемди тартыңыз — жактырылгандан кийин альбомго чыгат.</p>
+    <a class="page-back" href="/" data-t="album.back">← Чакыруу барагына</a>
   </div>
 
   <div class="camera-wrap">
     <div style="margin-bottom:1rem">
       <label class="rsvp-label" data-t="camera.nameLabel">Как вас зовут? (необязательно)</label>
-      <input class="rsvp-input" id="guest-name" maxlength="60" placeholder="Имя" />
+      <input class="rsvp-input" id="guest-name" maxlength="60" placeholder="Атыңыз" />
     </div>
 
     <div class="camera-stage" id="stage">
@@ -32,7 +32,7 @@
       <p class="counter-line" id="counter">…</p>
 
       <div id="live-controls" style="display:flex;flex-direction:column;align-items:center;gap:0.8rem">
-        <button class="shutter" id="shutter" aria-label="Снять фото"></button>
+        <button class="shutter" id="shutter" aria-label="Сүрөткө тартуу"></button>
         <label class="link-like" style="cursor:pointer">
           <span data-t="camera.orUpload">или выберите из галереи</span>
           <input class="gallery-input" id="file-input" type="file" accept="image/*" />
@@ -40,8 +40,8 @@
       </div>
 
       <div id="confirm-controls" style="display:none;gap:0.8rem;flex-wrap:wrap;justify-content:center">
-        <button class="btn" id="use-btn" data-t="camera.use">Загрузить это фото</button>
-        <button class="btn btn-ghost" id="retake-btn" data-t="camera.retake">Переснять</button>
+        <button class="btn" id="use-btn" data-t="camera.use">Бул сүрөттү жүктөө</button>
+        <button class="btn btn-ghost" id="retake-btn" data-t="camera.retake">Кайра тартуу</button>
       </div>
     </div>
 

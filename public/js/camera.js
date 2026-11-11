@@ -62,14 +62,14 @@ async function startCamera() {
   } catch (e) {
     // getUserMedia недоступен (нет разрешения или страница открыта не по HTTPS) —
     // переключаемся на нативную камеру телефона: тап по кнопке открывает её напрямую
-    errBox.textContent = t('camera.cameraDenied') || 'Нет доступа к камере — выберите фото из галереи.';
+    errBox.textContent = t('camera.cameraDenied') || 'Камерага уруксат берилген жок — галереядан сүрөт тандаңыз.';
     errBox.style.display = 'flex';
     shutter.style.display = 'none';
     fileInput.setAttribute('capture', 'environment');
     const label = fileInput.closest('label');
     label.classList.remove('link-like');
     label.classList.add('btn');
-    label.querySelector('span').textContent = '📷 Открыть камеру';
+    label.querySelector('span').textContent = '📷 Камераны ачуу';
   }
 }
 
@@ -145,7 +145,7 @@ document.getElementById('use-btn').addEventListener('click', async () => {
   try {
     const res = await fetch('/api/photos', { method: 'POST', body: fd });
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Ошибка загрузки');
+    if (!res.ok) throw new Error(data.error || 'Жүктөө ишке ашкан жок');
     showToast(t('camera.uploaded'));
     backToLive();
     await refreshMine();
@@ -163,7 +163,7 @@ async function refreshMine() {
   limit = lim;
   usedCount = photos.length;
 
-  const tmpl = t('camera.counter') || '{used} из {limit} фото';
+  const tmpl = t('camera.counter') || '{used} / {limit} сүрөт';
   counter.textContent = tmpl.replace('{used}', usedCount).replace('{limit}', limit);
 
   const limitReached = usedCount >= limit;
@@ -175,13 +175,13 @@ async function refreshMine() {
   photos.forEach((p, i) => {
     const item = document.createElement('div');
     item.className = 'mine-item';
-    const st = p.published ? t('camera.published') || 'В альбоме' : t('camera.pending') || 'На модерации';
+    const st = p.published ? t('camera.published') || 'Альбомдо' : t('camera.pending') || 'Текшерилүүдө';
     item.innerHTML = `
       <img src="${p.url}" alt="" loading="lazy" />
       <span class="status ${p.published ? 'pub' : ''}">${st}</span>
-      <button class="del" title="${t('camera.delete') || 'Удалить'}">✕</button>`;
+      <button class="del" title="${t('camera.delete') || 'Өчүрүү'}">✕</button>`;
     item.querySelector('.del').addEventListener('click', async () => {
-      if (!confirm(t('camera.confirmDelete') || 'Удалить это фото?')) return;
+      if (!confirm(t('camera.confirmDelete') || 'Бул сүрөт өчүрүлсүнбү?')) return;
       gsap.to(item, { opacity: 0, scale: 0.8, duration: 0.3 });
       await fetch(`/api/photos/${p.id}?guestId=${encodeURIComponent(guestId)}`, { method: 'DELETE' });
       refreshMine();

@@ -44,7 +44,7 @@ if (frame && matchMedia('(pointer:fine)').matches) {
 const PETAL_SVG =
   'data:image/svg+xml,' +
   encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><path d="M13 2 C20 6 22 14 13 24 C4 14 6 6 13 2 Z" fill="#d98a99" opacity="0.85"/></svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26"><path d="M13 2 C20 6 22 14 13 24 C4 14 6 6 13 2 Z" fill="#c87538" opacity="0.92"/><path d="M13 5 Q14 14 13 21" fill="none" stroke="#f4d2a4" stroke-width=".8"/></svg>`
   );
 
 function spawnPetal(hero) {
@@ -116,17 +116,17 @@ setInterval(tick, 1000);
 Content.onChange((data) => {
   tick();
   const schedule = document.getElementById('schedule');
-  schedule.innerHTML = '';
+  if (schedule) schedule.innerHTML = '';
   (data.programme.items || []).forEach((item) => {
     const row = document.createElement('div');
     row.className = 'schedule-row';
     row.innerHTML = `<span class="schedule-time"></span><span class="schedule-label"></span>`;
     row.querySelector('.schedule-time').textContent = item.time;
     row.querySelector('.schedule-label').textContent = item.label;
-    schedule.appendChild(row);
+    if (schedule) schedule.appendChild(row);
   });
   const map = document.getElementById('map-link');
-  if (data.venue.mapLink) map.href = data.venue.mapLink;
+  if (map && data.venue.mapLink) map.href = data.venue.mapLink;
 });
 
 /* ---------- RSVP (локально, с анимацией благодарности) ---------- */
@@ -155,17 +155,17 @@ document.getElementById('rsvp-form').addEventListener('submit', (e) => {
   const message = document.getElementById('rsvp-msg').value.trim();
   const attendLabel =
     attend === 'no'
-      ? Content.get('rsvp.attendNo') || 'К сожалению, нет'
-      : Content.get('rsvp.attendYes') || 'С радостью, да';
+      ? Content.get('rsvp.attendNo') || 'Тилекке каршы, келе албайм'
+      : Content.get('rsvp.attendYes') || 'Сүйүнүү менен келем';
 
   // формируем сообщение и открываем WhatsApp пары
   const lines = [
     Content.get('rsvp.waIntro') || '💐 Ответ на приглашение',
     '',
-    `Имя: ${name}`,
-    `Придёт: ${attendLabel}`,
+    `Аты: ${name}`,
+    `Келүүсү: ${attendLabel}`,
   ];
-  if (message) lines.push(`Сообщение: ${message}`);
+  if (message) lines.push(`Каалоо-тилек: ${message}`);
   const phone = (Content.get('rsvp.whatsapp') || '+996 559 02 01 99').replace(/\D/g, '');
   const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`;
 
@@ -183,7 +183,7 @@ let musicWanted = true; // false — гость сам выключил, не н
 
 function updateMusicBtn() {
   musicBtn.classList.toggle('is-muted', music.paused);
-  musicBtn.setAttribute('aria-label', music.paused ? 'Включить музыку' : 'Выключить музыку');
+  musicBtn.setAttribute('aria-label', music.paused ? 'Музыканы күйгүзүү' : 'Музыканы өчүрүү');
 }
 
 function tryPlayMusic() {

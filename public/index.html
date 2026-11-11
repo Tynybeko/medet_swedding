@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ky">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title data-t="meta.title">Тыныбек & Атыргул — Приглашение</title>
+  <title data-t="meta.title">Кылымбек жана Мырзагул — Тойго чакыруу</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -13,78 +13,84 @@
 
   <!-- HERO -->
   <section class="floral-hero" id="hero">
-    <img class="floral-blur" src="/img/roses.webp" alt="" aria-hidden="true" />
+    <img class="floral-blur" src="/autumn.jpg" alt="" aria-hidden="true" />
     <div class="floral-frame">
-      <img class="floral-art" src="/img/roses.webp" alt="Розы" />
+      <img class="floral-art" src="/autumn.jpg" alt="Күзгү алтын жалбырактар" />
       <div class="floral-overlay">
-        <p class="floral-eyebrow" data-t="hero.eyebrow">На пороге осени</p>
+        <p class="floral-eyebrow" data-t="hero.eyebrow">Күздүн алтын күнүндө</p>
         <h1 class="floral-names">
-          <span data-t="hero.name1">Тыныбек</span><span class="floral-amp">&amp;</span><span data-t="hero.name2">Атыргул</span>
+          <span data-t="hero.name1">Кылымбек</span><span class="floral-amp">&amp;</span><span data-t="hero.name2">Мырзагул</span>
         </h1>
         <span class="floral-rule" aria-hidden="true"></span>
-        <p class="floral-date" data-t="hero.date">20 августа 2026</p>
-        <p class="floral-loc" data-t="hero.venue">Зухра</p>
+        <p class="floral-date" data-t="hero.date">20-ноябрь, 2026-жыл · саат 16:00</p>
+        <p class="floral-loc" data-t="hero.venue">Ак Шумкар рестораны</p>
       </div>
     </div>
     <span class="floral-scroll" aria-hidden="true">↓</span>
   </section>
 
-  <!-- ОБРАТНЫЙ ОТСЧЁТ -->
+  <!-- Тойго чейинки убакыт -->
   <section class="countdown-section reveal">
-    <p class="section-num">— <span data-t="countdown.heading">До встречи осталось</span> —</p>
+    <p class="section-num">— <span data-t="countdown.heading">Тойго чейин калды</span> —</p>
     <div class="countdown-row" id="countdown">
-      <div class="countdown-cell"><span class="countdown-value" id="cd-days">··</span><span class="countdown-label" data-t="countdown.days">дней</span></div>
-      <div class="countdown-cell"><span class="countdown-value" id="cd-hours">··</span><span class="countdown-label" data-t="countdown.hours">часов</span></div>
-      <div class="countdown-cell"><span class="countdown-value" id="cd-min">··</span><span class="countdown-label" data-t="countdown.min">минут</span></div>
+      <div class="countdown-cell"><span class="countdown-value" id="cd-days">··</span><span class="countdown-label" data-t="countdown.days">күн</span></div>
+      <div class="countdown-cell"><span class="countdown-value" id="cd-hours">··</span><span class="countdown-label" data-t="countdown.hours">саат</span></div>
+      <div class="countdown-cell"><span class="countdown-value" id="cd-min">··</span><span class="countdown-label" data-t="countdown.min">мүнөт</span></div>
       <div class="countdown-cell"><span class="countdown-value" id="cd-sec">··</span><span class="countdown-label" data-t="countdown.sec">секунд</span></div>
     </div>
   </section>
 
-  <!-- 01 МЕСТО -->
+  <!-- Той өтүүчү жер -->
   <section class="section">
     <div class="section-card reveal">
       <p class="section-num" data-t="venue.num">— 01 —</p>
-      <h2 data-t="venue.heading">Место проведения</h2>
-      <p class="venue-name" data-t="venue.name">Асель</p>
-      <p data-t="venue.address">Таттыбубу Турсунбаевой 256а</p>
-      <a class="map-link" id="map-link" href="https://2gis.kg/bishkek/firm/70000001035106424?immersive=on" target="_blank" rel="noopener">Посмотреть на карте ↗</a>
+      <h2 data-t="venue.heading">Той өтүүчү жер</h2>
+      <p class="venue-name" data-t="venue.name">Ак Шумкар рестораны</p>
+      <p data-t="venue.address">20-ноябрь · саат 16:00</p>
+      <a class="map-link" id="map-link" data-t="venue.mapLabel" href="https://2gis.kg/search/Ак%20Шумкар%20ресторан" target="_blank" rel="noopener">Картадан көрүү ↗</a>
     </div>
   </section>
 
- 
+  <section class="section">
+    <div class="section-card reveal">
+      <p class="section-num" data-t="programme.num">— 02 —</p>
+      <h2 data-t="programme.heading">Той программасы</h2>
+      <div class="schedule" id="schedule"></div>
+    </div>
+  </section>
 
-  <!-- 03 РЕЧЬ ДЛЯ ГОСТЕЙ -->
+  <!-- Конокторго каалоо -->
   <section class="section">
     <div class="section-card reveal">
       <p class="section-num" data-t="speech.num">— 03 —</p>
-      <h2 data-t="speech.heading">Дорогие наши гости!</h2>
-      <p class="speech-text" data-t="speech.text">В жизни каждого человека наступает день, который делит её на «до» и «после». Для нас этот день — день нашей свадьбы, и мы очень хотим встретить его рядом с самыми близкими и дорогими людьми.</p>
+      <h2 data-t="speech.heading">Кымбаттуу конокторубуз!</h2>
+      <p class="speech-text" data-t="speech.text">Биз үчүн өзгөчө күн — баш кошкон күнүбүздү сиздер менен бирге белгилегибиз келет.</p>
     </div>
   </section>
 
-  <!-- 04 RSVP -->
+  <!-- Катышуу тууралуу жооп -->
   <section class="section" id="rsvp">
     <div class="section-card reveal">
       <p class="section-num" data-t="rsvp.num">— 04 —</p>
-      <h2 data-t="rsvp.heading">Вы придёте?</h2>
-      <p style="font-style:italic" data-t="rsvp.subtitle">Ваш ответ очень важен для нас.</p>
+      <h2 data-t="rsvp.heading">Тойго келесизби?</h2>
+      <p style="font-style:italic" data-t="rsvp.subtitle">Жообуңуз биз үчүн абдан маанилүү.</p>
       <form class="rsvp" id="rsvp-form">
         <div>
-          <label class="rsvp-label" data-t="rsvp.nameLabel">Ваше имя</label>
-          <input class="rsvp-input" id="rsvp-name" data-t-ph="rsvp.namePlaceholder" placeholder="Ваше имя" required maxlength="60" />
+          <label class="rsvp-label" data-t="rsvp.nameLabel">Атыңыз</label>
+          <input class="rsvp-input" id="rsvp-name" data-t-ph="rsvp.namePlaceholder" placeholder="Атыңызды жазыңыз" required maxlength="60" />
         </div>
         <div>
-          <label class="rsvp-label" data-t="rsvp.attendLabel">Придёте ли вы?</label>
+          <label class="rsvp-label" data-t="rsvp.attendLabel">Келериңизди билдирип коюңуз</label>
           <div class="rsvp-choice">
-            <button type="button" class="rsvp-choice-btn" data-attend="yes"><span data-t="rsvp.attendYes">С радостью, да</span></button>
-            <button type="button" class="rsvp-choice-btn" data-attend="no"><span data-t="rsvp.attendNo">К сожалению, нет</span></button>
+            <button type="button" class="rsvp-choice-btn" data-attend="yes"><span data-t="rsvp.attendYes">Сүйүнүү менен келем</span></button>
+            <button type="button" class="rsvp-choice-btn" data-attend="no"><span data-t="rsvp.attendNo">Тилекке каршы, келе албайм</span></button>
           </div>
         </div>
         <div>
-          <label class="rsvp-label" data-t="rsvp.messageLabel">Сообщение для пары</label>
+          <label class="rsvp-label" data-t="rsvp.messageLabel">Жаштарга каалоо-тилек</label>
           <textarea class="rsvp-input" id="rsvp-msg" rows="3" maxlength="500" data-t-ph="rsvp.messagePlaceholder" style="resize:vertical"></textarea>
         </div>
-        <button type="submit" class="btn" data-t="rsvp.submit">Отправить ответ →</button>
+        <button type="submit" class="btn" data-t="rsvp.submit">Жоопту жөнөтүү →</button>
       </form>
     </div>
   </section>
@@ -93,16 +99,16 @@
   <section class="section" id="photos">
     <div class="section-card reveal">
       <p class="section-num" data-t="photos.num">— 05 —</p>
-      <h2 data-t="photos.heading">Поделитесь фотографиями</h2>
-      <p data-t="photos.subtitle">Снимайте моменты праздника — лучшие кадры попадут в наш общий альбом.</p>
+      <h2 data-t="photos.heading">Сүрөттөрүңүз менен бөлүшүңүз</h2>
+      <p data-t="photos.subtitle">Тойдун жаркын көз ирмемдерин тартып, жалпы альбомубузга кошуңуз.</p>
       <div class="photo-cta">
-        <a class="btn" href="/camera.html" data-t="photos.uploadBtn">📷 Загрузить фото</a>
-        <a class="btn btn-ghost" href="/album.html" data-t="photos.albumBtn">Смотреть альбом →</a>
+        <a class="btn" href="/camera.html" data-t="photos.uploadBtn">📷 Сүрөт жүктөө</a>
+        <a class="btn btn-ghost" href="/album.html" data-t="photos.albumBtn">Альбомду көрүү →</a>
       </div>
     </div>
   </section>
 
-  <p class="credit reveal" data-t="footer.line">С любовью, Тыныбек &amp; Атыргул</p>
+  <p class="credit reveal" data-t="footer.line">Сүйүү менен, Кылымбек жана Мырзагул</p>
 
   <!-- реклама: заказ таких же пригласительных -->
   <footer class="promo-footer">
@@ -123,7 +129,7 @@
 
   <!-- фоновая музыка -->
   <audio id="bg-music" src="/music/music.mp3" loop preload="auto"></audio>
-  <button class="music-toggle is-muted" id="music-toggle" type="button" aria-label="Включить музыку">
+  <button class="music-toggle is-muted" id="music-toggle" type="button" aria-label="Музыканы күйгүзүү">
     <span></span><span></span><span></span><span></span>
   </button>
 

@@ -649,3 +649,83 @@ input, textarea { font-family: inherit; }
   body.grain::before { display: none; }
   .no-print { display: none !important; }
 }
+
+/* Күзгү палитра жана кыргыз оймо-чиймелеринен шыктанган кооздук */
+:root {
+  --paper: #f5eee2;
+  --paper-deep: #ead9c2;
+  --ink: #30271e;
+  --ink-soft: #77634e;
+  --rose: #a65432;
+  --rose-deep: #703923;
+  --rose-soft: #e6bd88;
+  --gold: #bd8a42;
+  --card: #fffaf1;
+  --shadow: 0 26px 70px -30px rgba(89, 47, 24, 0.48);
+}
+
+body.grain {
+  background-color: var(--paper);
+  background-image: radial-gradient(ellipse at 12% 18%, rgba(214, 160, 92, .15), transparent 35%),
+    radial-gradient(ellipse at 88% 68%, rgba(134, 73, 42, .10), transparent 38%);
+}
+.floral-hero { background: linear-gradient(145deg, #efe0ca, #f8f1e7 48%, #dfc6a5); }
+.floral-blur { filter: blur(48px) sepia(.38) saturate(1.2); opacity: .48; }
+.floral-art { filter: saturate(1.08) brightness(.86); }
+.floral-frame { border-radius: 46% 46% 1.2rem 1.2rem; border: 5px double rgba(245, 219, 173, .82); box-shadow: 0 30px 90px rgba(70, 38, 21, .35); }
+.floral-frame::before, .floral-frame::after {
+  content: "❖ ᠑ ❖";
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #f1cf92;
+  font-size: 1rem;
+  letter-spacing: .45em;
+  text-shadow: 0 2px 12px rgba(34, 19, 12, .7);
+  pointer-events: none;
+}
+.floral-frame::before { top: 1.2rem; }
+.floral-frame::after { bottom: 1.1rem; }
+.floral-overlay { background: linear-gradient(to top, rgba(42, 28, 19, .88), rgba(70, 42, 24, .26) 55%, rgba(34, 24, 17, .08)); }
+.floral-names { text-shadow: 0 4px 25px rgba(20, 12, 7, .38); }
+.floral-amp { color: #f0c878; }
+.section-card, .qr-card { position: relative; overflow: hidden; border-color: rgba(166, 84, 50, .23); }
+.section-card::before, .qr-card::before {
+  content: "";
+  position: absolute;
+  inset: .55rem;
+  border: 1px solid rgba(189, 138, 66, .26);
+  border-radius: .8rem;
+  pointer-events: none;
+}
+.section-card::after {
+  content: "✦  ❋  ✦";
+  display: block;
+  color: var(--gold);
+  opacity: .68;
+  letter-spacing: .55em;
+  margin-top: 1.5rem;
+}
+.countdown-section { background: linear-gradient(90deg, transparent, rgba(189, 138, 66, .12), transparent); }
+.countdown-value { color: var(--rose-deep); }
+.btn { background: linear-gradient(135deg, #aa5935, #743c25); box-shadow: 0 10px 26px -14px rgba(84, 43, 24, .7); }
+.rsvp-choice-btn.active { background: #a65432; border-color: #a65432; }
+.music-toggle { border-color: rgba(166, 84, 50, .34); }
+.schedule { margin-top: 1rem; }
+.schedule-row { display: flex; align-items: center; justify-content: center; gap: 1rem; padding: .9rem; border-top: 1px solid rgba(189, 138, 66, .25); color: var(--ink-soft); }
+.schedule-time { color: var(--rose-deep); font-size: 1.25rem; }
+.petal { filter: drop-shadow(0 3px 3px rgba(75, 41, 19, .18)); }
+.floral-scroll { color: var(--rose-deep); }
+.photo-cta .btn-ghost {
+  color: #fff;
+  background: var(--rose);
+  border-color: transparent;
+  box-shadow: 0 12px 28px -12px rgba(112, 57, 35, .55);
+}
+.photo-cta .btn-ghost:hover { color: #fff; background: var(--rose-deep); }
+@keyframes autumn-glow { 0%, 100% { box-shadow: 0 20px 48px -30px rgba(121, 66, 33, .42); } 50% { box-shadow: 0 26px 58px -28px rgba(189, 138, 66, .55); } }
+.section-card { animation: autumn-glow 6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}

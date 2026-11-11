@@ -32,7 +32,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     body: JSON.stringify({ password }),
   });
   if (!res.ok) {
-    document.getElementById('login-error').textContent = 'Неверный пароль';
+    document.getElementById('login-error').textContent = 'Сырсөз туура эмес';
     gsap.fromTo('#login-form', { x: -8 }, { x: 0, duration: 0.4, ease: 'elastic.out(1, 0.3)' });
     return;
   }
@@ -60,7 +60,7 @@ async function refresh() {
   }
   photos = await res.json();
   const pub = photos.filter((p) => p.published).length;
-  stats.textContent = `Всего: ${photos.length} · Опубликовано: ${pub} · Ожидает: ${photos.length - pub}`;
+  stats.textContent = `Баары: ${photos.length} · Жарыяланды: ${pub} · Күтүүдө: ${photos.length - pub}`;
   render();
 }
 
@@ -77,12 +77,12 @@ function render() {
     item.innerHTML = `
       <img src="${p.url}" alt="" loading="lazy" style="cursor:zoom-in" />
       <div class="meta">
-        <span class="badge ${p.published ? 'pub' : ''}">${p.published ? 'В альбоме' : 'На модерации'}</span><br/>
+        <span class="badge ${p.published ? 'pub' : ''}">${p.published ? 'Альбомдо' : 'Текшерилүүдө'}</span><br/>
         ${p.guestName ? '📷 ' + escapeHtml(p.guestName) + ' · ' : ''}${date}${p.ip ? '<br/>IP: ' + escapeHtml(p.ip) : ''}
       </div>
       <div class="actions">
-        <button class="pub-btn ${p.published ? 'on' : ''}">${p.published ? 'Снять' : 'Опубликовать'}</button>
-        <button class="del-btn">Удалить</button>
+        <button class="pub-btn ${p.published ? 'on' : ''}">${p.published ? 'Жашыруу' : 'Жарыялоо'}</button>
+        <button class="del-btn">Өчүрүү</button>
       </div>`;
     item.querySelector('img').addEventListener('click', () => window.open(p.url, '_blank'));
     item.querySelector('.pub-btn').addEventListener('click', async () => {
@@ -91,14 +91,14 @@ function render() {
         headers: { ...authHeaders(), 'Content-Type': 'application/json' },
         body: JSON.stringify({ published: !p.published }),
       });
-      showToast(p.published ? 'Снято с публикации' : 'Опубликовано в альбоме ✓');
+      showToast(p.published ? 'Жарыялангандардан алынды' : 'Альбомго жарыяланды ✓');
       refresh();
     });
     item.querySelector('.del-btn').addEventListener('click', async () => {
-      if (!confirm('Удалить это фото безвозвратно?')) return;
+      if (!confirm('Бул сүрөт биротоло өчүрүлсүнбү?')) return;
       gsap.to(item, { opacity: 0, scale: 0.85, duration: 0.3 });
       await fetch(`/api/photos/${p.id}`, { method: 'DELETE', headers: authHeaders() });
-      showToast('Фото удалено');
+      showToast('Сүрөт өчүрүлдү');
       refresh();
     });
     grid.appendChild(item);
@@ -118,7 +118,7 @@ document.querySelectorAll('.tab-btn').forEach((btn) => {
 document.getElementById('publish-all').addEventListener('click', async () => {
   const res = await fetch('/api/admin/photos/publish-all', { method: 'POST', headers: authHeaders() });
   const { count } = await res.json();
-  showToast(count ? `Опубликовано фото: ${count}` : 'Новых фото нет');
+  showToast(count ? `Жарыяланган сүрөттөр: ${count}` : 'Жаңы сүрөт жок');
   refresh();
 });
 

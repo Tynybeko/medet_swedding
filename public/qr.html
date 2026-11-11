@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ky">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QR — Поделитесь фото</title>
+  <title>QR — Сүрөттөр менен бөлүшүңүз</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body class="grain" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1rem">
 
   <div class="qr-card" id="card">
-    <p class="section-num" data-t="meta.couple">Медет &amp; Айпери</p>
-    <h1 style="font-size:clamp(1.8rem,5vw,2.4rem);font-weight:500" data-t="qr.title">Поделитесь моментами!</h1>
+    <p class="section-num" data-t="meta.couple">Кылымбек жана Мырзагул</p>
+    <h1 style="font-size:clamp(1.8rem,5vw,2.4rem);font-weight:500" data-t="qr.title">Көз ирмемдер менен бөлүшүңүз!</h1>
     <p style="color:var(--ink-soft);margin-top:0.7rem;line-height:1.55" data-t="qr.subtitle">
-      Наведите камеру телефона на QR-код — и снимайте прямо на нашу свадебную стену.
+      Телефонуңуздун камерасын QR-кодго багыттап, сүрөттөрдү той альбомуна жүктөңүз.
     </p>
-    <img id="qr-img" alt="QR-код для загрузки фото" />
-    <p class="qr-hint" data-t="qr.hint">Каждый гость может загрузить до 10 фотографий</p>
+    <img id="qr-img" alt="Сүрөт жүктөө үчүн QR-код" />
+    <p class="qr-hint" data-t="qr.hint">Ар бир конок 10 сүрөткө чейин жүктөй алат</p>
     <p class="qr-url" id="qr-url"></p>
     <div class="no-print" style="margin-top:1.6rem;display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap">
-      <a class="btn" href="/api/qr.pdf">⬇ Скачать PDF для печати</a>
-      <button class="btn btn-ghost" onclick="window.print()">🖨 Распечатать</button>
-      <a class="btn btn-ghost" href="/">← На сайт</a>
+      <a class="btn" href="/api/qr.pdf">⬇ Басып чыгаруу үчүн PDF</a>
+      <button class="btn btn-ghost" onclick="window.print()">🖨 Басып чыгаруу</button>
+      <a class="btn btn-ghost" href="/">← Башкы бетке</a>
     </div>
   </div>
 
