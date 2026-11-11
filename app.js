@@ -339,76 +339,93 @@ app.get('/api/qr', ah(async (req, res) => {
   res.json({ url, qr: dataUrl });
 }));
 
-/* ---------- PDF-постер с QR для печати ---------- */
+/* ---------- A4 PDF QR-барактары ---------- */
 app.get('/api/qr.pdf', ah(async (req, res) => {
   const PDFDocument = require('pdfkit');
   const content = JSON.parse(fs.readFileSync(path.join(__dirname, 'content.json'), 'utf8'));
   const host = req.headers.host;
   const proto = req.headers['x-forwarded-proto'] || 'http';
   const url = `${proto}://${host}/camera.html`;
+  let groups = [{ label: 'Коноктор', pages: 1 }];
+  if (req.query.groups) {
+    try {
+      groups = JSON.parse(req.query.groups);
+    } catch (_) {
+      return res.status(400).json({ error: 'QR топторунун тизмеси туура эмес' });
+    }
+  }
+  if (!Array.isArray(groups) || !groups.length || groups.length > 25) {
+    return res.status(400).json({ error: '1ден 25ке чейин топ кошуңуз' });
+  }
+  groups = groups.map((group) => ({
+    label: String(group && group.label || '').trim().slice(0, 50),
+    pages: Number(group && group.pages),
+  }));
+  const totalPages = groups.reduce((sum, group) => sum + group.pages, 0);
+  if (groups.some((group) => !group.label || !Number.isInteger(group.pages) || group.pages < 1 || group.pages > 100) || totalPages > 100) {
+    return res.status(400).json({ error: 'Топтун атын жана 1–100 барак санын туура көрсөтүңүз (жалпысы 100дөн ашпасын)' });
+  }
 
-  // A3 портрет; QR рисуем векторными квадратами — при печати в любом
-  // размере (хоть баннер 2×3 м) он останется идеально резким
-  const W = 841.89, H = 1190.55;
-  const ROSE = '#b0495c', ROSE_DEEP = '#8c3547', INK = '#3c2228', SOFT = '#7a5a60', PAPER = '#fdf7f4';
-
-  const doc = new PDFDocument({ size: [W, H], margin: 0 });
+  const W = 595.28, H = 841.89;
+  const RUST = '#a65432', DEEP = '#703923', INK = '#30271e', SOFT = '#77634e', GOLD = '#bd8a42', PAPER = '#f5eee2';
+  const doc = new PDFDocument({ size: 'A4', margin: 0, autoFirstPage: true });
   res.set('Content-Type', 'application/pdf');
-  res.set('Content-Disposition', 'attachment; filename="qr-banner.pdf"');
+  res.set('Content-Disposition', 'attachment; filename="ak-shumkar-qr-a4.pdf"');
   doc.pipe(res);
 
   doc.registerFont('serif', path.join(__dirname, 'fonts', 'PTSerif-Regular.ttf'));
   doc.registerFont('serif-bold', path.join(__dirname, 'fonts', 'PTSerif-Bold.ttf'));
   doc.registerFont('serif-italic', path.join(__dirname, 'fonts', 'PTSerif-Italic.ttf'));
 
-  // фон и рамка
-  doc.rect(0, 0, W, H).fill(PAPER);
-  doc.lineWidth(1.5).roundedRect(36, 36, W - 72, H - 72, 18).stroke(ROSE);
-  doc.lineWidth(0.7).roundedRect(46, 46, W - 92, H - 92, 14).stroke('#d9a3ad');
-
-  // шапка
-  doc.font('serif-italic').fontSize(20).fillColor(SOFT)
-    .text((content.hero && content.hero.eyebrow) || '', 0, 96, { width: W, align: 'center' });
-  doc.font('serif-bold').fontSize(56).fillColor(ROSE_DEEP)
-    .text((content.meta && content.meta.couple) || '', 0, 128, { width: W, align: 'center' });
-  // разделитель
-  doc.moveTo(W / 2 - 90, 210).lineTo(W / 2 + 90, 210).lineWidth(1).stroke(ROSE);
-
-  doc.font('serif-bold').fontSize(34).fillColor(INK)
-    .text((content.qr && content.qr.title) || 'Поделитесь моментами!', 0, 240, { width: W, align: 'center' });
-  doc.font('serif').fontSize(17).fillColor(SOFT)
-    .text((content.qr && content.qr.subtitle) || '', W * 0.18, 296, { width: W * 0.64, align: 'center', lineGap: 4 });
-
-  // белая карточка + векторный QR
   const qr = QRCode.create(url, { errorCorrectionLevel: 'H' });
   const size = qr.modules.size;
-  const QR_SIZE = 430;
-  const cell = QR_SIZE / size;
-  const qx = (W - QR_SIZE) / 2;
-  const qy = 400;
-  doc.roundedRect(qx - 30, qy - 30, QR_SIZE + 60, QR_SIZE + 60, 22).fill('#ffffff');
-  doc.lineWidth(1).roundedRect(qx - 30, qy - 30, QR_SIZE + 60, QR_SIZE + 60, 22).stroke('#e8c5cc');
-  doc.fillColor('#4a1f28');
-  for (let r = 0; r < size; r++) {
-    for (let c = 0; c < size; c++) {
-      if (qr.modules.get(r, c)) doc.rect(qx + c * cell, qy + r * cell, cell + 0.3, cell + 0.3);
+  const QR_SIZE = 320;
+  let printed = 0;
+  for (const group of groups) {
+    for (let copy = 1; copy <= group.pages; copy++) {
+      if (printed++) doc.addPage({ size: 'A4', margin: 0 });
+      doc.rect(0, 0, W, H).fill(PAPER);
+      doc.lineWidth(1.5).roundedRect(25, 25, W - 50, H - 50, 18).stroke(RUST);
+      doc.lineWidth(0.7).roundedRect(34, 34, W - 68, H - 68, 14).stroke('#d2b17c');
+      doc.font('serif-italic').fontSize(16).fillColor(SOFT)
+        .text((content.hero && content.hero.eyebrow) || '', 45, 72, { width: W - 90, align: 'center' });
+      doc.font('serif-bold').fontSize(28).fillColor(DEEP)
+        .text((content.meta && content.meta.couple) || '', 45, 103, { width: W - 90, align: 'center' });
+      doc.font('serif').fontSize(14).fillColor(SOFT)
+        .text(`${content.hero.date}  ·  ${content.hero.venue}`, 45, 145, { width: W - 90, align: 'center' });
+      doc.moveTo(160, 180).lineTo(W - 160, 180).lineWidth(1).stroke(GOLD);
+      doc.font('serif-bold').fontSize(23).fillColor(INK)
+        .text('Сүрөттөр менен бөлүшүңүз', 45, 204, { width: W - 90, align: 'center' });
+      doc.font('serif-bold').fontSize(64).fillColor(DEEP)
+        .text(group.label, 50, 224, { width: W - 100, height: 70, fit: [W - 100, 70], align: 'center', lineBreak: false });
+      doc.font('serif').fontSize(14).fillColor(SOFT)
+        .text('Телефонуңуздун камерасын QR-кодго багыттаңыз', 45, 306, { width: W - 90, align: 'center' });
+
+      const cell = QR_SIZE / size;
+      const qx = (W - QR_SIZE) / 2;
+      const qy = 342;
+      doc.roundedRect(qx - 18, qy - 18, QR_SIZE + 36, QR_SIZE + 36, 16).fill('#fffefa');
+      doc.lineWidth(1).roundedRect(qx - 18, qy - 18, QR_SIZE + 36, QR_SIZE + 36, 16).stroke('#d2b17c');
+      doc.fillColor(DEEP);
+      for (let r = 0; r < size; r++) {
+        for (let c = 0; c < size; c++) {
+          if (qr.modules.get(r, c)) doc.rect(qx + c * cell, qy + r * cell, cell + 0.25, cell + 0.25);
+        }
+      }
+      doc.fill(DEEP);
+      doc.font('serif-italic').fontSize(15).fillColor(SOFT)
+        .text('Сүрөткө тартып, той альбомуна жүктөңүз', 40, 700, { width: W - 80, align: 'center' });
+      if (group.pages > 1) {
+        doc.font('serif').fontSize(11).fillColor(SOFT)
+          .text(`${copy} / ${group.pages}`, 40, 725, { width: W - 80, align: 'center' });
+      }
+      doc.moveTo(190, 760).lineTo(W - 190, 760).lineWidth(.7).stroke('#d2b17c');
+      doc.font('serif').fontSize(14).fillColor(DEEP)
+        .text('Ак Шумкар рестораны', 40, 775, { width: W - 80, align: 'center' });
+      doc.font('serif').fontSize(10).fillColor(SOFT)
+        .text(url, 45, 800, { width: W - 90, align: 'center', lineBreak: false, ellipsis: true });
     }
   }
-  doc.fill('#4a1f28');
-
-  // подсказка и адрес
-  doc.font('serif-italic').fontSize(18).fillColor(SOFT)
-    .text((content.qr && content.qr.hint) || '', 0, qy + QR_SIZE + 58, { width: W, align: 'center' });
-  doc.font('serif').fontSize(15).fillColor(ROSE)
-    .text(url, 0, qy + QR_SIZE + 92, { width: W, align: 'center' });
-
-  // рекламный футер
-  const fy = H - 132;
-  doc.moveTo(W / 2 - 140, fy).lineTo(W / 2 + 140, fy).lineWidth(0.7).stroke('#d9a3ad');
-  doc.font('serif').fontSize(13).fillColor(SOFT)
-    .text('Хотите такое же пригласительное?', 0, fy + 16, { width: W, align: 'center' });
-  doc.font('serif-bold').fontSize(14).fillColor(ROSE_DEEP)
-    .text('Telegram @zhtynybek   ·   WhatsApp +996 559 020 199', 0, fy + 38, { width: W, align: 'center' });
 
   doc.end();
 }));

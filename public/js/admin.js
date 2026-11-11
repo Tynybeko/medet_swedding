@@ -71,7 +71,7 @@ function render() {
   empty.hidden = list.length > 0;
   grid.innerHTML = '';
   list.forEach((p, i) => {
-    const date = new Date(p.uploadedAt).toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const date = new Date(p.uploadedAt).toLocaleString('ky-KG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
     const item = document.createElement('div');
     item.className = 'admin-item';
     item.innerHTML = `
@@ -135,3 +135,78 @@ setInterval(() => { if (token && !panelView.hidden) refresh(); }, 15000);
 function escapeHtml(s) {
   return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+
+/* ---------- Топторго арналган QR барактары ---------- */
+const qrGroupsEl = document.getElementById('qr-groups');
+const QR_GROUPS_KEY = 'wedding-qr-groups-v1';
+let qrGroups = (() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(QR_GROUPS_KEY) || 'null');
+    if (Array.isArray(saved) && saved.length) return saved;
+  } catch (_) { /* сакталган маалымат бузулса, демейки топту көрсөтөбүз */ }
+  return [{ label: 'Достор', pages: 1 }];
+})();
+
+function saveQrGroups() {
+  localStorage.setItem(QR_GROUPS_KEY, JSON.stringify(qrGroups));
+}
+
+function renderQrGroups() {
+  qrGroupsEl.innerHTML = '';
+  qrGroups.forEach((group, index) => {
+    const row = document.createElement('div');
+    row.className = 'qr-group-row';
+    row.innerHTML = `
+      <label>Топтун аты<input class="rsvp-input qr-group-label" maxlength="50" value="${escapeHtml(String(group.label || ''))}" placeholder="Мисалы: Достор"></label>
+      <label>Барактардын саны<input class="rsvp-input qr-group-pages" type="number" min="1" max="100" value="${Math.max(1, Math.min(100, Number(group.pages) || 1))}"></label>
+      <button class="qr-group-remove" type="button" aria-label="Топту өчүрүү">×</button>`;
+    row.querySelector('.qr-group-label').addEventListener('input', (event) => {
+      qrGroups[index].label = event.target.value;
+      saveQrGroups();
+    });
+    row.querySelector('.qr-group-pages').addEventListener('input', (event) => {
+      qrGroups[index].pages = Math.max(1, Math.min(100, Number(event.target.value) || 1));
+      saveQrGroups();
+    });
+    row.querySelector('.qr-group-remove').addEventListener('click', () => {
+      qrGroups.splice(index, 1);
+      if (!qrGroups.length) qrGroups.push({ label: '', pages: 1 });
+      saveQrGroups();
+      renderQrGroups();
+    });
+    qrGroupsEl.appendChild(row);
+  });
+}
+
+function getQrGroups() {
+  const groups = qrGroups.map(({ label, pages }) => ({ label: String(label || '').trim(), pages: Number(pages) || 1 }));
+  const total = groups.reduce((sum, group) => sum + group.pages, 0);
+  if (groups.some((group) => !group.label)) {
+    showToast('Ар бир топко ат жазыңыз');
+    return null;
+  }
+  if (groups.length > 25 || total > 100 || groups.some((group) => group.pages < 1 || group.pages > 100)) {
+    showToast('25 топко жана жалпысынан 100 баракка чейин кошууга болот');
+    return null;
+  }
+  return groups;
+}
+
+document.getElementById('add-qr-group').addEventListener('click', () => {
+  qrGroups.push({ label: '', pages: 1 });
+  saveQrGroups();
+  renderQrGroups();
+  qrGroupsEl.lastElementChild.querySelector('.qr-group-label').focus();
+});
+document.getElementById('download-qr-pdf').addEventListener('click', () => {
+  const groups = getQrGroups();
+  if (!groups) return;
+  window.location.href = `/api/qr.pdf?groups=${encodeURIComponent(JSON.stringify(groups))}`;
+});
+document.getElementById('print-qr-pages').addEventListener('click', () => {
+  const groups = getQrGroups();
+  if (!groups) return;
+  const params = new URLSearchParams({ groups: JSON.stringify(groups), print: '1' });
+  window.open(`/qr.html?${params}`, '_blank', 'noopener');
+});
+renderQrGroups();

@@ -33,9 +33,19 @@
       <button class="tab-btn" data-tab="all">Баары</button>
       <span style="flex-basis:100%"></span>
       <button class="btn" id="publish-all" style="font-size:0.9rem;padding:0.6rem 1.5rem">✓ Жаңыларын жарыялоо</button>
-      <a class="btn btn-ghost" href="/qr.html" style="font-size:0.9rem;padding:0.6rem 1.5rem">Коноктор үчүн QR-код</a>
       <a class="btn btn-ghost" href="/album.html" style="font-size:0.9rem;padding:0.6rem 1.5rem">Альбом</a>
     </div>
+
+    <section class="qr-settings">
+      <h2>Коноктор үчүн QR барактары</h2>
+      <p>Ар бир топко ат жана басып чыгара турган барактардын санын жазыңыз.</p>
+      <div id="qr-groups" class="qr-groups"></div>
+      <div class="qr-settings-actions">
+        <button class="btn btn-ghost" type="button" id="add-qr-group">+ Топ кошуу</button>
+        <button class="btn" type="button" id="download-qr-pdf">PDF жүктөө</button>
+        <button class="btn btn-ghost" type="button" id="print-qr-pages">Басып чыгаруу</button>
+      </div>
+    </section>
 
     <div class="admin-grid" id="grid"></div>
     <p class="album-empty" id="empty" hidden>Бул бөлүмдө азырынча сүрөт жок.</p>

@@ -645,6 +645,29 @@ input, textarea { font-family: inherit; }
 }
 .badge.pub { background: var(--rose); color: #fff; }
 
+.qr-settings {
+  max-width: 48rem;
+  margin: 0 auto 2.5rem;
+  padding: 1.6rem;
+  background: var(--card);
+  border: 1px solid rgba(166, 84, 50, .23);
+  border-radius: 1rem;
+  box-shadow: 0 18px 48px -30px rgba(89, 47, 24, .48);
+}
+.qr-settings h2 { text-align: center; font-size: 1.7rem; font-weight: 500; }
+.qr-settings > p { text-align: center; color: var(--ink-soft); margin: .45rem 0 1.2rem; }
+.qr-groups { display: grid; gap: .7rem; }
+.qr-group-row { display: grid; grid-template-columns: minmax(0, 1fr) 9rem 2.6rem; gap: .65rem; align-items: end; }
+.qr-group-row label { display: grid; gap: .35rem; color: var(--ink-soft); font-family: var(--sans); font-size: .75rem; }
+.qr-group-row .rsvp-input { width: 100%; }
+.qr-group-remove { height: 2.65rem; border: 1px solid rgba(166, 84, 50, .25); border-radius: .6rem; background: transparent; color: var(--rose-deep); font-size: 1.4rem; }
+.qr-settings-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem; margin-top: 1.2rem; }
+.qr-settings-actions .btn { font-size: .92rem; padding: .7rem 1.3rem; }
+@media (max-width: 540px) {
+  .qr-settings { padding: 1.2rem 1rem; }
+  .qr-group-row { grid-template-columns: minmax(0, 1fr) 6.5rem 2.25rem; gap: .4rem; }
+}
+
 @media print {
   body.grain::before { display: none; }
   .no-print { display: none !important; }

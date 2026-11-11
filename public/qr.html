@@ -3,39 +3,105 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>QR — Сүрөттөр менен бөлүшүңүз</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <title>Коноктор үчүн QR барактары</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body.qr-print-body { display: block; min-height: 100vh; padding: 1.5rem; }
+    .qr-print-pages { display: grid; justify-content: center; gap: 1.5rem; }
+    .qr-print-page {
+      position: relative; display: flex; flex-direction: column; align-items: center;
+      width: min(210mm, calc(100vw - 2rem)); min-height: 297mm; padding: 18mm 16mm 14mm;
+      overflow: hidden; text-align: center; color: #30271e;
+      background: #f5eee2; border: 1.5px solid #a65432; outline: 1px solid #bd8a42; outline-offset: -4mm;
+    }
+    .qr-print-page::before, .qr-print-page::after { content: "❖ ᠑ ❖"; color: #bd8a42; letter-spacing: .55em; font-size: 1rem; }
+    .qr-print-page::before { margin-bottom: 1.6rem; }
+    .qr-print-page::after { margin-top: auto; padding-top: 1rem; }
+    .qr-print-eyebrow { color: #77634e; font-style: italic; font-size: 1.1rem; }
+    .qr-print-couple { color: #703923; font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 500; margin-top: .4rem; }
+    .qr-print-date { color: #77634e; font-size: 1rem; margin-top: .4rem; }
+    .qr-print-divider { width: 5rem; border-top: 1px solid #bd8a42; margin: 1.4rem 0; }
+    .qr-print-heading { font-size: 1.55rem; font-weight: 500; }
+    .qr-print-group { max-width: 100%; margin-top: .35rem; color: #703923; font-size: clamp(3.8rem, 15vw, 6rem); line-height: 1; font-weight: 700; letter-spacing: .015em; overflow-wrap: anywhere; }
+    .qr-print-instructions { color: #77634e; margin: .7rem 0 1.2rem; }
+    .qr-print-code { width: min(94mm, 68vw); aspect-ratio: 1; padding: 4mm; background: white; border: 1px solid #d2b17c; border-radius: 1rem; }
+    .qr-print-note { color: #77634e; font-style: italic; margin-top: 1.2rem; }
+    .qr-print-copy { color: #77634e; font-size: .8rem; margin-top: .35rem; }
+    .qr-print-venue { color: #703923; font-size: 1rem; margin-top: .6rem; }
+    .qr-print-url { color: #77634e; font: .65rem var(--sans); overflow-wrap: anywhere; margin-top: .4rem; }
+    .qr-print-actions { margin: 1.5rem auto; display: flex; justify-content: center; gap: .7rem; flex-wrap: wrap; }
+    @page { size: A4 portrait; margin: 0; }
+    @media print {
+      body.qr-print-body { padding: 0; background: white; }
+      body.qr-print-body::before { display: none; }
+      .qr-print-pages { display: block; }
+      .qr-print-page { width: 210mm; height: 297mm; min-height: 0; margin: 0; border: 0; outline: 0; page-break-after: always; break-after: page; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .qr-print-group { font-size: 64pt; line-height: 1; }
+      .qr-print-page:last-child { page-break-after: auto; break-after: auto; }
+      .qr-print-actions { display: none !important; }
+    }
+  </style>
 </head>
-<body class="grain" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1rem">
-
-  <div class="qr-card" id="card">
-    <p class="section-num" data-t="meta.couple">Кылымбек жана Мырзагул</p>
-    <h1 style="font-size:clamp(1.8rem,5vw,2.4rem);font-weight:500" data-t="qr.title">Көз ирмемдер менен бөлүшүңүз!</h1>
-    <p style="color:var(--ink-soft);margin-top:0.7rem;line-height:1.55" data-t="qr.subtitle">
-      Телефонуңуздун камерасын QR-кодго багыттап, сүрөттөрдү той альбомуна жүктөңүз.
-    </p>
-    <img id="qr-img" alt="Сүрөт жүктөө үчүн QR-код" />
-    <p class="qr-hint" data-t="qr.hint">Ар бир конок 10 сүрөткө чейин жүктөй алат</p>
-    <p class="qr-url" id="qr-url"></p>
-    <div class="no-print" style="margin-top:1.6rem;display:flex;gap:0.7rem;justify-content:center;flex-wrap:wrap">
-      <a class="btn" href="/api/qr.pdf">⬇ Басып чыгаруу үчүн PDF</a>
-      <button class="btn btn-ghost" onclick="window.print()">🖨 Басып чыгаруу</button>
-      <a class="btn btn-ghost" href="/">← Башкы бетке</a>
-    </div>
-  </div>
-
-  <script src="/vendor/gsap/gsap.min.js"></script>
-  <script src="/js/content.js"></script>
+<body class="grain qr-print-body">
+  <main class="qr-print-pages" id="qr-print-pages" aria-live="polite"></main>
+  <nav class="qr-print-actions no-print">
+    <a class="btn" id="download-pdf" href="/api/qr.pdf">PDF жүктөө</a>
+    <button class="btn btn-ghost" type="button" onclick="window.print()">Басып чыгаруу</button>
+    <a class="btn btn-ghost" href="/admin.html">Админкага кайтуу</a>
+  </nav>
   <script>
-    gsap.from('#card', { opacity: 0, y: 40, scale: 0.96, duration: 1, ease: 'power3.out' });
-    fetch('/api/qr')
-      .then((r) => r.json())
-      .then(({ url, qr }) => {
-        document.getElementById('qr-img').src = qr;
-        document.getElementById('qr-url').textContent = url;
-        gsap.from('#qr-img', { opacity: 0, scale: 0.8, duration: 0.8, delay: 0.3, ease: 'back.out(1.6)' });
+    const params = new URLSearchParams(location.search);
+    let groups = [{ label: 'Коноктор', pages: 1 }];
+    try {
+      const parsed = JSON.parse(params.get('groups') || 'null');
+      if (Array.isArray(parsed) && parsed.length) groups = parsed;
+    } catch (_) { /* демейки бир барак */ }
+    const safeGroups = groups.slice(0, 25).map((g) => ({
+      label: String(g.label || 'Коноктор').slice(0, 50),
+      pages: Math.max(1, Math.min(100, Number(g.pages) || 1)),
+    }));
+    const totalPages = safeGroups.reduce((sum, group) => sum + group.pages, 0);
+    if (totalPages > 100) safeGroups.forEach((group) => { group.pages = 1; });
+    const pdfUrl = new URL('/api/qr.pdf', location.origin);
+    pdfUrl.searchParams.set('groups', JSON.stringify(safeGroups));
+    document.getElementById('download-pdf').href = pdfUrl.toString();
+
+    Promise.all([fetch('/api/qr').then((response) => response.json()), fetch('/content.json').then((response) => response.json())]).then(([{ url, qr }, content]) => {
+      const container = document.getElementById('qr-print-pages');
+      safeGroups.forEach((group) => {
+        for (let copy = 1; copy <= group.pages; copy++) {
+          const page = document.createElement('article');
+          page.className = 'qr-print-page';
+          const addText = (tag, className, text) => {
+            const element = document.createElement(tag);
+            element.className = className;
+            element.textContent = text;
+            page.appendChild(element);
+          };
+          addText('p', 'qr-print-eyebrow', content.hero.eyebrow);
+          addText('h1', 'qr-print-couple', content.meta.couple);
+          addText('p', 'qr-print-date', `${content.hero.date} · ${content.hero.venue}`);
+          const divider = document.createElement('div'); divider.className = 'qr-print-divider'; page.appendChild(divider);
+          addText('h2', 'qr-print-heading', content.qr.title);
+          addText('p', 'qr-print-group', group.label);
+          addText('p', 'qr-print-instructions', content.qr.subtitle);
+          const image = document.createElement('img'); image.className = 'qr-print-code'; image.src = qr; image.alt = 'Сүрөт жүктөө үчүн QR-код'; page.appendChild(image);
+          addText('p', 'qr-print-note', content.qr.hint);
+          if (group.pages > 1) addText('p', 'qr-print-copy', `${copy} / ${group.pages}`);
+          addText('p', 'qr-print-venue', content.venue.name);
+          addText('p', 'qr-print-url', url);
+          container.appendChild(page);
+        }
       });
+      if (params.get('print') === '1') {
+        const printNow = () => setTimeout(() => window.print(), 350);
+        if (document.readyState === 'complete') printNow();
+        else window.addEventListener('load', printNow, { once: true });
+      }
+    }).catch(() => {
+      document.getElementById('qr-print-pages').textContent = 'QR барагын жүктөө мүмкүн болгон жок. Кайра аракет кылыңыз.';
+    });
   </script>
 </body>
 </html>
