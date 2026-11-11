@@ -187,7 +187,11 @@ function updateMusicBtn() {
 }
 
 function tryPlayMusic() {
-  if (!musicWanted || !music.paused) return;
+  if (!musicWanted) return;
+  if (!music.paused) {
+    updateMusicBtn();
+    return;
+  }
   music.volume = 0;
   music
     .play()
@@ -200,6 +204,8 @@ function tryPlayMusic() {
     });
 }
 
+music.addEventListener('play', updateMusicBtn);
+music.addEventListener('pause', updateMusicBtn);
 tryPlayMusic();
 // браузеры разрешают звук после первого взаимодействия — ловим любое
 ['pointerdown', 'touchstart', 'keydown', 'scroll'].forEach((ev) =>
